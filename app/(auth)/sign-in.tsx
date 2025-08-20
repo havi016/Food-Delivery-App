@@ -3,6 +3,8 @@ import React, {useState} from 'react'
 import {Link, router} from "expo-router";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
+import { signIn } from "@/src/api/authApi"; // adjust path based on where you put it
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -15,7 +17,13 @@ const SignIn = () => {
         setIsSubmitting(true)
 
         try {
-            //calling appwrite sign in
+            //calling my api sign in
+            const response = await signIn(email, password)
+
+            const token = response.data.token;
+
+            console.log(token);
+            await AsyncStorage.setItem("token", token);
 
             Alert.alert("Success", "Sign in Successful");
             router.replace('/')

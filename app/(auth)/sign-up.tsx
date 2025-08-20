@@ -1,71 +1,80 @@
-import {View, Text, Alert} from 'react-native'
-import React, {useState} from 'react'
-import {Link, router} from "expo-router";
+import { View, Text, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Link, router } from "expo-router";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
-import {createUser} from "@/lib/appwrite";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signUp, signIn } from "@/src/api/authApi";
 
 const SignUp = () => {
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [form, setForm] = useState({name: '', email: '', password: ''})
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [form, setForm] = useState({ name: '', email: '', password: '' });
 
     const submit = async () => {
-        const { email, name, password } = form;
+        const { name, email, password } = form;
 
-        if(!name || !email || !password){ return  Alert.alert('Error', 'Please enter a valid email address and password.');}
-
-        setIsSubmitting(true)
-
-        try {
-            await createUser({email, password, name})
-
-            router.replace('/')
-        } catch (error: any) {
-            Alert.alert('Error', error.message);
-        } finally {
-            setIsSubmitting(false)
+        if (!name || !email || !password) {
+            return Alert.alert('Error', 'Please enter all fields correctly.');
         }
 
-    }
+        setIsSubmitting(true);
+
+        try {
+            // Sign up
+            await signUp(name, email, password);
+
+            // Auto sign in
+            const response = await signIn(email, password);
+            const token = response.data.token;
+
+            // Save token locally
+            await AsyncStorage.setItem("token", token);
+
+            // Redirect to home
+            router.replace('/');
+
+        } catch (error: any) {
+            console.error(error.response?.data || error.message);
+            const msg = error.response?.data?.message || 'Something went wrong';
+            Alert.alert('Error', msg);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <View className="gap-10 bg-white rounded-lg p-5 mt-5">
             <CustomInput
-                placeholder={"Enter full name"}
-                value = {form.name}
-                onChangeText={(text) => setForm((prev) => ({ ...prev, name: text}))}
+                placeholder="Enter full name"
+                value={form.name}
+                onChangeText={text => setForm(prev => ({ ...prev, name: text }))}
                 label="Full name"
             />
             <CustomInput
-                placeholder={"Enter email address"}
-                value = {form.email}
-                onChangeText={(text) => setForm((prev) => ({ ...prev, email: text}))}
+                placeholder="Enter email address"
+                value={form.email}
+                onChangeText={text => setForm(prev => ({ ...prev, email: text }))}
                 label="Email"
-                keyboardType={"email-address"}
+                keyboardType="email-address"
             />
-
             <CustomInput
-                placeholder={"Enter Password"}
-                value = {form.password}
-                onChangeText={(text) => setForm((prev) => ({ ...prev, password: text}))}
+                placeholder="Enter Password"
+                value={form.password}
+                onChangeText={text => setForm(prev => ({ ...prev, password: text }))}
                 label="Password"
-                secureTextEntry={true}
+                secureTextEntry
             />
             <CustomButton
-                title = "Sign Up"
+                title="Sign Up"
                 isLoading={isSubmitting}
                 onPress={submit}
             />
-
-            <View className="flex justify-center mt-5 flex-row gap-2">
-                <Text className={"base-regular text-gray-100"}>
-                    Already have an account?
-                </Text>
-                <Link href={"/sign-in"} className={"base-bold text-primary"}>
-                    Sign In
-                </Link>
+            <View className="flex-row justify-center mt-5 gap-2">
+                <Text className="base-regular text-gray-100">Already have an account?</Text>
+                <Link href="/sign-in" className="base-bold text-primary">Sign In</Link>
             </View>
         </View>
-    )
-}
-export default SignUp
+    );
+};
+
+export default SignUp;

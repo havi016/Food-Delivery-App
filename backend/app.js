@@ -3,7 +3,11 @@ const router = require('./routes/user-routes');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "http://192.168.1.77:19006",
+    methods: ["GET","POST","PUT","DELETE"],
+    credentials: true
+}));
 app.use(express.json());
 app.use("/users", router);
 
