@@ -137,11 +137,24 @@ const auth = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     try{
         const decodedToken = jwt.verify(token, "secret_key");
-        req.user = decodedToken;
+        req.userId = decodedToken;
         next();
     }catch(err){
         return res.status(401).json({message:"invalid token"});
     }
+}
+
+const getCurrentUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.userId.id);
+        if (!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+        res.status(200).json({user});
+    }catch(err){
+        next(err);
+    }
+
 }
 
 exports.getAllUsers = getAllUsers;
@@ -151,3 +164,4 @@ exports.deleteUser = deleteUser;
 exports.getUserById = getUserById;
 exports.loginUser = loginUser;
 exports.auth = auth;
+exports.getCurrentUser = getCurrentUser;

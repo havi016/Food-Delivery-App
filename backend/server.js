@@ -9,7 +9,7 @@ mongoose.connect(mongoURL)
 
         const PORT = 3000;
         app.listen(PORT, () => {
-            console.log(`Server running on http://192.168.1.77:${PORT}`);
+            console.log(`Server running on http://192.168.1.76:${PORT}`);
         });
     })
     .catch(err => console.error(err));

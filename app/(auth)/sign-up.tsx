@@ -4,7 +4,7 @@ import { Link, router } from "expo-router";
 import CustomInput from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { signUp, signIn } from "@/src/api/authApi";
+import {signUp, signIn, getCurrentUser} from "@/src/api/authApi";
 
 const SignUp = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,17 +20,17 @@ const SignUp = () => {
         setIsSubmitting(true);
 
         try {
-            // Sign up
             await signUp(name, email, password);
 
-            // Auto sign in
             const response = await signIn(email, password);
+
             const token = response.data.token;
 
-            // Save token locally
             await AsyncStorage.setItem("token", token);
 
-            // Redirect to home
+            const userResponse = await getCurrentUser()
+            console.log(userResponse)
+
             router.replace('/');
 
         } catch (error: any) {
