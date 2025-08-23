@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const app = require('./app'); // your Express app
 const os = require('os');
+const dotenv = require('dotenv');
+
+const path = require('path');
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const PORT = 3000;
 
@@ -19,7 +23,7 @@ function getLocalIp() {
 
 const ip = getLocalIp();
 
-const mongoURL = "mongodb+srv://admin:wFavJEuWpAfRd5x1@cluster0.xkftiax.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURL = process.env.MONGODB_URI;
 
 mongoose.connect(mongoURL)
     .then(() => {

@@ -1,15 +1,24 @@
 const express = require('express');
-const router = require('./routes/user-routes');
 const cors = require('cors');
+
+const userRouter = require('./routes/user-routes');
+const categoryRouter = require('./routes/categories-routes');
+const customisationRouter = require('./routes/customisation-routes');
+const menuRouter = require('./routes/menus-routes'); // assuming you have this
 
 const app = express();
 app.use(cors({
-    origin: "http://192.168.1.77:19006",
+    origin: "http://192.168.1.76:19006",
     methods: ["GET","POST","PUT","DELETE"],
     credentials: true
 }));
+
 app.use(express.json());
-app.use("/users", router);
+
+app.use("/users", userRouter);
+app.use("/categories", categoryRouter);
+app.use("/customisations", customisationRouter);
+app.use("/menus", menuRouter);
 
 // global error handler
 app.use((err, req, res, next) => {

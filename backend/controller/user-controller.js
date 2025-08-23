@@ -23,7 +23,7 @@ const addUser = async (req, res, next) => {
     if (!name ||
         name.trim() ==="" ||
         !email ||
-        email.trim() ==="" ||
+        email.trim() === "" ||
         !password ||
         password.length < 6){
         return res.status(422) .json({message:"invalid data"});
@@ -128,7 +128,6 @@ const loginUser = async (req, res, next) => {
 
     }catch(e){next(e)}
 }
-
 
 const auth = async (req, res, next) => {
     const authHeader = req.headers.authorization;
