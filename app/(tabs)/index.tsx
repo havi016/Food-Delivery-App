@@ -5,12 +5,15 @@ import React, {Fragment} from "react";
 import {Image} from "react-native";
 import cn from "clsx";
 import CartButton from "@/components/CartButton";
+import useAuthStore from "@/store/auth.store";
 export default function Index() {
+
+    const { user } = useAuthStore();
+
+    console.log("useAuthStore", JSON.stringify(user, null, 2));
+
     return (
         <SafeAreaView className={"flex-1 bg-gray-50 my-8 "}>
-
-
-
 
             <FlatList
                 data={offers}

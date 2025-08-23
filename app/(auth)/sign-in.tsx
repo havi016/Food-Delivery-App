@@ -10,6 +10,7 @@ const SignIn = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [form, setForm] = useState({email: '', password: ''})
 
+
     const submit = async () => {
         const {email, password} = form
         if(!form.email || !form.password){ return Alert.alert('Error', 'Please enter a valid email address and password.');}
@@ -28,14 +29,13 @@ const SignIn = () => {
             const userResponse = await getCurrentUser()
             console.log(userResponse)
 
-            Alert.alert("Success", `Welcome ${userResponse.data.user.name}`);
+            Alert.alert("Success", `Welcome ${userResponse.name}`);
             router.replace('/')
         } catch (error: any) {
             Alert.alert('Error', error.message);
         } finally {
             setIsSubmitting(false)
         }
-
     }
 
     return (
@@ -59,6 +59,7 @@ const SignIn = () => {
                 title = "Sign in"
                 isLoading={isSubmitting}
                 onPress={submit}
+
             />
 
             <View className="flex justify-center mt-5 flex-row gap-2">

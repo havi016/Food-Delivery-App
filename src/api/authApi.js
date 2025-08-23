@@ -15,7 +15,9 @@ export const signIn = async (email, password) => {
 
 export const getCurrentUser = async () => {
     const token = await AsyncStorage.getItem("token");
-    return axios.get(`${API_URL}/current-user`, {
+
+    const { data } = await axios.get(`${API_URL}/current-user`, {
         headers: { Authorization: `Bearer ${token}` },
     });
+    return data.user;
 };
