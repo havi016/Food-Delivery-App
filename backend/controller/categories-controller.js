@@ -48,7 +48,7 @@ const deleteCategory = async (req, res) => {
 
         await Menu.updateMany({ category: id }, { $unset: { category: "" } });
 
-        await category.remove();
+        await Category.findByIdAndDelete(id);
         res.json({ message: "Category deleted" });
     } catch (err) {
         res.status(500).json({ message: err.message });

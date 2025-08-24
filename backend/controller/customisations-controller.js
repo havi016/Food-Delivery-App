@@ -49,7 +49,7 @@ const deleteCustomisation = async (req, res) => {
             { $pull: { customisations: id } }
         );
 
-        await customisation.remove();
+        await Customisation.findByIdAndDelete(id);
         res.json({ message: "Customisation deleted" });
     } catch (err) {
         res.status(500).json({ message: err.message });

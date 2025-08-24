@@ -13,13 +13,15 @@ const {
 
 const router = express.Router();
 
+router.get('/search', searchMenus);
+router.get('/category/:categoryId', getMenusByCategory);
+
+router.get('/:id', getMenuById);
+
 router.post('/', createMenu);
 router.get('/', getAllMenus);
-router.get('/:id', getMenuById);
 router.delete('/:id', deleteMenu);
 
-router.get('/category/:categoryId', getMenusByCategory);
-router.get('/search', searchMenus);
 router.get('/sorted/by-rating', getMenusSortedByRating);
 
 router.post('/:menuId/customisations/:customisationId', addCustomisationToMenu);
